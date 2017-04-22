@@ -6,16 +6,27 @@ import java.io.FileWriter;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public aspect myop {
+	
 	int n = 10;
 	int num = 0;
 	int beb = 0;
+	int e=0;
 	File f;
 	Map<String, Boolean> map = new HashMap<String, Boolean>();
 
 	// 设置切点qiedian
+	pointcut xuanzeweier(int a, int b):
+	    withincode(* Ouraspectj.*(int,int))&&args(a)&&args(b);
 
+		before(int a, int b) : xuanzeweier(int,int) && !withincode(void Ouraspectj.q(int)) && args(a)&&args(b) {
+			if(a==1)
+			e=1;
+			if(a==0)
+		    e=0;	
+		}
 	pointcut qiedian():execution(* Ouraspectj.*(..));// 执行Ouraspectj1包，以及子孙包下的所有方法
 
 	/*
@@ -28,6 +39,7 @@ public aspect myop {
 
 		// 写入函数调用顺序到文件
 		if (num == 0) {
+			
 			MapManager();
 		}
 		f = new File("result.txt");
@@ -44,6 +56,7 @@ public aspect myop {
 			String s=thisJoinPoint.getStaticPart().getSignature().getName();
 			FileWriter fileWriter = new FileWriter(f, true);
 			fileWriter.write(s+ "()→");
+			
 			fileWriter.close();
 			map.put(s,true);
 		} catch (Exception e) {
@@ -67,6 +80,7 @@ public aspect myop {
 	}// 持有一个包括所有静态信息的对象，可以通过thisJoinPoint.getStaticPart()方法得到该对象的引用,方法名用signature.getName()拿到//
 
 	after(): qiedian(){
+		
 		if (num == 1) {
 			f = new File("result.txt");
 			try {
@@ -78,6 +92,14 @@ public aspect myop {
 			}
 			try {
 				FileWriter fileWriter = new FileWriter(f, true);
+				 if(e==1)
+	                {
+	                	fileWriter.write("true");
+	                }
+	                if(e==0)
+	                {
+	                	fileWriter.write("false");
+	                }
 				fileWriter.write("\r\n");
 				fileWriter.close();
 			} catch (Exception e) {
@@ -102,7 +124,17 @@ public aspect myop {
 						fileWriter.write("0");
 					}
 				}
+                if(e==1)
+                {
+                	fileWriter.write("1");
+                }
+                if(e==0)
+                {
+                	fileWriter.write("0");
+                }
+                
 				fileWriter.write("\r\n");
+			
 				fileWriter.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -146,13 +178,7 @@ public aspect myop {
 		num--;
 	}
 
-	pointcut xuanzeweier(int a, int b):
-    withincode(* Ouraspectj.*(int,int))&&args(a)&&args(b);
-
-	before(int a, int b) : xuanzeweier(int,int) && !withincode(void Ouraspectj.q(int)) && args(a)&&args(b) {
-		a = a + n;
-		System.out.println(a);
-	}
+	
 
 	void MapManager() {
 		map.put("main", false);

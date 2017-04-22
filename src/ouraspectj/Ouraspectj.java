@@ -63,8 +63,10 @@ public class Ouraspectj {// 国足球员号码信息
 			case "1":
 				int qinum;
 				int b = 0;
+				
 				qinum = 100;
 				test.a(qinum, b);
+				
 				break;
 			case "2":
 				int qnmgb;
@@ -457,7 +459,10 @@ public class Ouraspectj {// 国足球员号码信息
 
 	private void g(int a, int b) {
 		if (a != b) {
-			a = 0;
+			if(a==100||a==200||a==250)
+				{a=1;}
+			else
+				a = 0;
 		} else {
 			a = 1;
 		}
