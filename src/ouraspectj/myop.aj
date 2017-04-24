@@ -217,5 +217,6 @@ public aspect myop {
 		map.put("iv", false);
 		map.put("g", false);
 		map.put("p", false);
+		map.put("q",false);
 	}
 }
